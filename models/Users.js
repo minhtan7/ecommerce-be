@@ -9,7 +9,7 @@ const userSchema = Schema(
     password: { type: String, required: true },
     name: { type: String, required: true },
     role: { type: String, default: "user", enum: ["user", "admin"] },
-    balance: { type: Number, default: 2000000 },
+    balance: { type: Number, default: 200000000 },
     avatarUrl: {
       type: String,
       require: true,
