@@ -23,13 +23,6 @@ router.post(
 );
 
 /**
- * @route PUT api/category/:id
- * @description admin can update category
- * @access admin required
- */
-/* s */
-
-/**
  * @route DELETE api/category/:id
  * @description admin can delete category
  * @access admin required

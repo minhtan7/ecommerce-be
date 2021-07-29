@@ -26,7 +26,7 @@ router.get(
  * @description User can make a payment
  * @access Login required
  */
-router.put("/", authMiddleware.loginRequired, userController.editProfile);
+router.put("/me", authMiddleware.loginRequired, userController.editProfile);
 
 /**
  * @route Put api/users/:id/payment
@@ -45,6 +45,13 @@ router.put(
  * @access Login required
  */
 router.post("/cart", authMiddleware.loginRequired, userController.addToCart);
+
+/**
+ * @route DEL api/users/cart
+ * @description User can delete their cart
+ * @access Login required
+ */
+router.delete("/cart", authMiddleware.loginRequired, userController.deleteCart);
 
 /**
  * @route PUT api/users/:id/topup

@@ -9,7 +9,10 @@ const userController = {};
 userController.getCurrentUser = async (req, res, next) => {
   try {
     const userId = req.userId;
-    let user = await Users.findById(userId).populate();
+    let user = await Users.findById(userId).populate("orders").populate({
+      path: "cart",
+      populate: "productId",
+    });
     if (!user) throw new Error("User not exists");
 
     utilsHelper.sendResponse(
@@ -28,12 +31,16 @@ userController.getCurrentUser = async (req, res, next) => {
 userController.editProfile = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const { name, email, password } = req;
+    const { name, email, avatarUrl } = req;
+    if (!avatarUrl) {
+      avatarUrl =
+        "https://res.cloudinary.com/tanvo/image/upload/v1627371374/coderschool/anonymus_avatar_unisex_rogach.jpg";
+    }
     let user = await Users.findById(userId);
     if (!user) throw new Error("User not exists");
     user = await Users.findByIdAndUpdate(
       userId,
-      { name, email, password },
+      { name, email, avatarUrl },
       { new: true }
     );
 
@@ -177,20 +184,15 @@ userController.paymentUserOrder = async (req, res, next) => {
     order.status = "paid";
     await order.save();
 
-    user.cart.forEach(async (product) => {
-      const p = await Products.findById(product.productId._id);
-      p.stock -= product.quantity;
-      await p.save();
-    });
-
-    utilsHelper.sendResponse(
-      res,
-      200,
-      true,
-      { order },
-      null,
-      "Payment success"
+    Promise.all(
+      user.cart.forEach(async (product) => {
+        const p = await Products.findById(product.productId._id);
+        p.stock -= product.quantity;
+        await p.save();
+      })
     );
+
+    utilsHelper.sendResponse(res, 200, true, { user }, null, "Payment success");
   } catch (error) {
     next(error);
   }
@@ -219,6 +221,20 @@ userController.topUpBalance = async (req, res, next) => {
       null,
       "Successfully top up User balance"
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+userController.deleteCart = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    let user = await Users.findById(userId);
+    if (!user) return next(new Error("User not found"));
+
+    user = await Users.findByIdAndUpdate(userId, { cart: [] }, { new: true });
+
+    utilsHelper.sendResponse(res, 200, true, { user }, null, "Cart deleted");
   } catch (error) {
     next(error);
   }
