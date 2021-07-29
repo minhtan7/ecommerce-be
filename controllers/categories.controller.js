@@ -5,12 +5,20 @@ const categoryController = {};
 
 categoryController.getAllCat = async (req, res, next) => {
   try {
+    let { page, limit } = { ...req.query };
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+    const offset = limit * (page - 1);
+
+    let totalCategories = await Category.find().countDocuments();
+    totalPages = Math.ceil(totalCategories / limit);
+
     const categories = await Category.find();
     utilsHelper.sendResponse(
       res,
       200,
       true,
-      { categories },
+      { categories, totalPages },
       null,
       "Get all category succeffuly"
     );
