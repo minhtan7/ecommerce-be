@@ -125,10 +125,17 @@ productController.getProductsByCategories = async (req, res, next) => {
         .populate("categories", "name -_id")
         .populate("reviews", "-_id");
     } else {
+      totalProducts = await Product.find({
+        categories: { $elemMatch: { $eq: categoryId } },
+      }).countDocuments();
+      totalPages = Math.ceil(totalProducts / limit);
       products = await Product.find({
         categories: { $elemMatch: { $eq: categoryId } },
-      });
-      console.log("products", products);
+      })
+        .skip(offset)
+        .limit(limit)
+        .populate("categories", "name -_id")
+        .populate("reviews", "-_id");
     }
 
     let productIds = products.map((product) => product._id);
