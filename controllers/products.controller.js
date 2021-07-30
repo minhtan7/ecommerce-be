@@ -52,6 +52,9 @@ productController.getAllProducts = async (req, res, next) => {
       //   .populate("reviews", "-_id")
       //   .sort({ avgRating: sortBy });
     } else {
+      totalProducts = await Product.find().countDocuments();
+      totalPages = Math.ceil(totalProducts / limit);
+
       products = await Product.find()
         .skip(offset)
         .limit(limit)
