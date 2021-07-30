@@ -26,8 +26,8 @@ productController.getAllProducts = async (req, res, next) => {
       })
         .skip(offset)
         .limit(limit)
-        .populate("categories", "name -_id")
-        .populate("reviews", "-_id");
+        .populate("categories", "name")
+        .populate("reviews");
       // products = await Product.aggregate([
       //   {
       //     $lookup: {
@@ -58,8 +58,8 @@ productController.getAllProducts = async (req, res, next) => {
       products = await Product.find()
         .skip(offset)
         .limit(limit)
-        .populate("categories", "name -_id")
-        .populate("reviews", "-_id");
+        .populate("categories", "name")
+        .populate("reviews");
     }
     // } else if (search) {
     // } else if (sortBy) {
@@ -125,8 +125,8 @@ productController.getProductsByCategories = async (req, res, next) => {
       })
         .skip(offset)
         .limit(limit)
-        .populate("categories", "name -_id")
-        .populate("reviews", "-_id");
+        .populate("categories", "name")
+        .populate("reviews");
     } else {
       totalProducts = await Product.find({
         categories: { $elemMatch: { $eq: categoryId } },
@@ -137,8 +137,8 @@ productController.getProductsByCategories = async (req, res, next) => {
       })
         .skip(offset)
         .limit(limit)
-        .populate("categories", "name -_id")
-        .populate("reviews", "-_id");
+        .populate("categories", "name")
+        .populate("reviews");
     }
 
     let productIds = products.map((product) => product._id);
