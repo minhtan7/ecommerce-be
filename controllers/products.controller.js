@@ -233,7 +233,9 @@ productController.updateProduct = async (req, res, next) => {
 productController.getSingleProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId)
+      .populate("categories", "name")
+      .populate("reviews");
     utilsHelper.sendResponse(
       res,
       200,
