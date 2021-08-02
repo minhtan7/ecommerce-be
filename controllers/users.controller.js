@@ -167,32 +167,43 @@ userController.paymentUserOrder = async (req, res, next) => {
     let user = await Users.findById(userId);
     const total = order.total;
     const funds = user.balance;
-    console.log(total);
-    console.log(funds);
-    if (total > funds) return next(new Error("403-Insufficient balance"));
+    if (total > funds) {
+      console.log("sth here4");
+      throw new Error("403-Insufficient balance");
+    } else {
+      user = await Users.findByIdAndUpdate(
+        userId,
+        { balance: funds - total },
+        { new: true }
+      );
+      console.log("sth here");
+      // order = Orders.findByIdAndUpdate(
+      //   orderId,
+      //   { status: "paid" },
+      //   { new: true }
+      // );
+      order.status = "paid";
+      await order.save();
 
-    user = await Users.findByIdAndUpdate(
-      userId,
-      { balance: funds - total },
-      { new: true }
-    );
-    // order = Orders.findByIdAndUpdate(
-    //   orderId,
-    //   { status: "paid" },
-    //   { new: true }
-    // );
-    order.status = "paid";
-    await order.save();
+      Promise.all(
+        user.cart.forEach(async (product) => {
+          const p = await Products.findById(product.productId._id);
+          p.stock -= product.quantity;
+          await p.save();
+          console.log("sth here 2");
+        })
+      );
+      console.log("sth here 3");
 
-    Promise.all(
-      user.cart.forEach(async (product) => {
-        const p = await Products.findById(product.productId._id);
-        p.stock -= product.quantity;
-        await p.save();
-      })
-    );
-
-    utilsHelper.sendResponse(res, 200, true, { user }, null, "Payment success");
+      utilsHelper.sendResponse(
+        res,
+        200,
+        true,
+        { user },
+        null,
+        "Payment success"
+      );
+    }
   } catch (error) {
     next(error);
   }

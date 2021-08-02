@@ -39,7 +39,6 @@ orderController.createOrder = async (req, res, next) => {
     //   p.stock -= product.quantity;
     //   await p.save();
     // });
-    user.balance -= total;
     user.cart = [];
     user.orders.push(order._id);
     user.save();
