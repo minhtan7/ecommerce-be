@@ -8,7 +8,6 @@ const productController = require("../controllers/products.controller");
  * @description User can register with email and password
  * @access Public
  */
-router.get("/register", productController.getAllProducts);
 router.post("/register", authController.register);
 
 /**
