@@ -1,12 +1,14 @@
 const express = require("express");
-const authController = require("../controllers/auth.controller");
 const router = express.Router();
+const authController = require("../controllers/auth.controller");
+const productController = require("../controllers/products.controller");
 
 /**
  * @route POST api/auth/register
  * @description User can register with email and password
  * @access Public
  */
+router.get("/register", productController.getAllProducts);
 router.post("/register", authController.register);
 
 /**
