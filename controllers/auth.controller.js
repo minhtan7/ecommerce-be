@@ -6,9 +6,11 @@ const authController = {};
 authController.register = async (req, res, next) => {
   try {
     let { name, email, password } = req.body;
+
     console.log(name, email, password);
     let user = await Users.findOne({ email });
     if (user) return next(new Error("401 - Email already exits"));
+
     const salt = await bcrypt.genSalt(10);
     password = await bcrypt.hash(password, salt);
 
@@ -33,14 +35,17 @@ authController.register = async (req, res, next) => {
 
 authController.loginWithEmail = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body; //123
+
     let user = await Users.findOne({ email });
     if (!user) return next(new Error("401 - Email not exists"));
 
     const isMatch = bcrypt.compare(password, user.password);
+
     if (!isMatch) return next(new Error("401 - Wrong password"));
 
     const accessToken = await user.generateToken();
+
     utilsHelper.sendResponse(
       res,
       200,
@@ -55,3 +60,5 @@ authController.loginWithEmail = async (req, res, next) => {
 };
 
 module.exports = authController;
+
+// if (isMatch) return next(new AppError(400, "Password not match","Login error"))

@@ -28,7 +28,7 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
-  .then(() => console.log(`Mongoose connected to ${mongoURI}`))
+  .then(() => console.log(`Mongoose connected to database`))
   .catch((err) => console.log(err));
 
 app.use("/api", indexRouter);

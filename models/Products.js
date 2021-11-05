@@ -13,9 +13,9 @@ const productsSchema = Schema(
       },
     ],
     description: { type: String, require: true },
-    reviews: [{ type: mongoose.Types.ObjectId, ref: "Reviews" }],
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Reviews" }],
     avgRating: { type: Number, require: true, default: 0 },
-    categories: [{ type: mongoose.Types.ObjectId, ref: "Categories" }],
+    categories: [{ type: Schema.Types.ObjectId, ref: "Categories" }],
     isDeleted: { type: Boolean, default: false },
   },
   {

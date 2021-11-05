@@ -12,7 +12,7 @@ orderController.createOrder = async (req, res, next) => {
     console.log(userId);
     let user = await Users.findById(userId).populate({
       path: "cart",
-      populate: "productId",
+      populate: "cart",
     });
     if (!user) throw new Error("User not exists");
 
