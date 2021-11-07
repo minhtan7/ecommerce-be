@@ -9,11 +9,11 @@ const orderController = {};
 orderController.createOrder = async (req, res, next) => {
   try {
     const userId = req.userId;
-    console.log(userId);
     let user = await Users.findById(userId).populate({
       path: "cart",
-      populate: "cart",
+      populate: "productId",
     });
+    console.log(user);
     if (!user) throw new Error("User not exists");
 
     const total = user.cart.reduce((total, product) => {
@@ -32,6 +32,7 @@ orderController.createOrder = async (req, res, next) => {
         productId: product.productId._id,
       };
     });
+    console.log(orderItems);
     const order = await Orders.create({ userId, orderItems, total }); // later should use aggregation
 
     // user.cart.forEach(async (product) => {
