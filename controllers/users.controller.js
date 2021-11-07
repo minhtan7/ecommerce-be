@@ -239,7 +239,8 @@ userController.topUpBalance = async (req, res, next) => {
 
 userController.deleteCart = async (req, res, next) => {
   try {
-    const userId = req.id;
+    const userId = req.userId;
+
     let user = await Users.findById(userId);
     if (!user) return next(new Error("User not found"));
 
@@ -252,5 +253,3 @@ userController.deleteCart = async (req, res, next) => {
 };
 
 module.exports = userController;
-
-
