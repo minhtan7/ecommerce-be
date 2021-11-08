@@ -31,7 +31,7 @@ userController.getCurrentUser = async (req, res, next) => {
 userController.editProfile = async (req, res, next) => {
   try {
     const userId = req.userId;
-    let { name, email, avatarUrl } = req;
+    let { name, email, avatarUrl } = req.body;
     if (!avatarUrl) {
       avatarUrl =
         "https://res.cloudinary.com/tanvo/image/upload/v1627371374/coderschool/anonymus_avatar_unisex_rogach.jpg";
